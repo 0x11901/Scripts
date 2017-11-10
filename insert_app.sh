@@ -15,3 +15,10 @@ rm -f ${temp}.m
 
 # 使用unsign或者optool效果可能更好，codesign --remove-signature 在删除代码签名之后没有修复MachO Header的偏移，导致生成的MachO文件畸形
 # codesign --remove-signature ${name}
+if [ ! -e "./${path}/Contents/MacOS/${name}.ori" ]; then
+    unsign "./${path}/Contents/MacOS/${name}"
+    mv "./${path}/Contents/MacOS/${name}" "./${path}/Contents/MacOS/${name}.ori"
+    mv "./${path}/Contents/MacOS/${name}.unsigned" "./${path}/Contents/MacOS/${name}"
+fi
+
+open "./${path}/Contents/MacOS/${name}"
