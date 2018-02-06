@@ -3,13 +3,11 @@
 ################# variable define##########
 now=`date "+%Y%m%d%H%M%S"`
 
-baseDir="/Users/wangjingkai/Library/Application Support/ZeroNet/data"
-users_json="./users.json"
-sites_json="./sites.json"
-mutes_json="./mutes.json"
+baseDir="/Users/wangjingkai/Library/Application Support/Namecoin"
+wallet_dat="./wallet.dat"
 
-cloud_backup_dir="/Users/wangjingkai/Library/Mobile Documents/com~apple~CloudDocs/ZoreNet"
-local_backup_dir="/Users/wangjingkai/资源/归档/ZoreNet"
+cloud_backup_dir="/Users/wangjingkai/Library/Mobile Documents/com~apple~CloudDocs/Namecoin"
+local_backup_dir="/Users/wangjingkai/资源/归档/Namecoin"
 
 ###########MAIN##################
 # check directory exist
@@ -22,8 +20,8 @@ fi
 
 # tar and gzip
 cd "${baseDir}"
-tar -zcvf "${cloud_backup_dir}/zeroNetBackup+${now}.tar.gz" "${users_json}" "${sites_json}" "${mutes_json}"
-tar -zcvf "${local_backup_dir}/zeroNetBackup+${now}.tar.gz" "${users_json}" "${sites_json}" "${mutes_json}"
+tar -zcvf "${cloud_backup_dir}/namecoinBackup+${now}.tar.gz" "${wallet_dat}"
+tar -zcvf "${local_backup_dir}/namecoinBackup+${now}.tar.gz" "${wallet_dat}"
 
 num=`ls -l "${cloud_backup_dir}" |grep "^-"|wc -l`
 if [ ${num} -gt 5 ]; then
