@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-path="~/Library/Application\ Support/ZeroNet/data"
+now=`date "+%Y%m%d%H%M%S"`
 
-cd "${path}"
-pwd
+baseDir="/Users/wangjingkai/Library/Application Support/ZeroNet/data"
+users_json="${baseDir}/users.json"
+sites_json="${baseDir}/sites.json"
+mutes_json="${baseDir}/mutes.json"
+
+ls "$baseDir"
