@@ -24,7 +24,7 @@ if [ ! -d "${cloud_backup_dir}" ]; then
     echo "${red}iCloud Drive备份路径不存在！${reset}"
     mkdir -p "${cloud_backup_dir}"
     echo "${green}自动创建iCloud Drive备份路径：${reset}${cloud_backup_dir}"
-    else
+else
     echo "${green}iCloud Drive备份路径:${reset}${cloud_backup_dir}"
 fi
 
@@ -32,7 +32,7 @@ if [ ! -d "${local_backup_dir}" ]; then
     echo "${red}本地备份路径不存在！${reset}"
     mkdir -p "${local_backup_dir}"
     echo "${green}自动创建本地备份路径：${reset}${local_backup_dir}"
-    else
+else
     echo "${green}本地备份路径:${reset}${cloud_backup_dir}"
 fi
 
