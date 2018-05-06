@@ -14,9 +14,14 @@ xcode_dir="${HOME}/Library/Developer/Xcode/UserData"
 cloud_backup_dir="${HOME}/Library/Mobile Documents/com~apple~CloudDocs/XcodeBackup"
 local_backup_dir="${HOME}/资源/归档/XcodeBackup"
 
+xcode_backup_database="${HOME}/Library/Mobile Documents/com~apple~CloudDocs/BackupDatabase"
+
 code_snippets="CodeSnippets"
 font_and_color_themes="FontAndColorThemes"
 key_bindings="KeyBindings"
+
+temp="DoNotModify"
+database="${xcode_backup_database}/${temp}"
 
 ########### MAIN ##################
 # check directory exist
@@ -36,10 +41,18 @@ else
     echo "${green}本地备份路径:${reset}${cloud_backup_dir}"
 fi
 
+if [ ! -d "${xcode_backup_database}" ]; then
+    echo "${red}同步数据库路径不存在！${reset}"
+    mkdir -p "${xcode_backup_database}"
+    echo "${green}自动创建数据库路径：${reset}${local_backup_dir}"
+else
+    echo "${green}数据库路径:${reset}${cloud_backup_dir}"
+fi
+
 # zip files
-cd "${xcode_dir}"
-zip -r "${cloud_backup_dir}/XcodeBackup+${now}.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
-zip -r "${local_backup_dir}/XcodeBackup+${now}.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
+#cd "${xcode_dir}"
+#zip -r "${cloud_backup_dir}/XcodeBackup+${now}.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
+#zip -r "${local_backup_dir}/XcodeBackup+${now}.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
 
 wait
 
@@ -57,3 +70,24 @@ if [ ${num} -gt 5 ]; then
     cd "${local_backup_dir}"
     ls -tr "${local_backup_dir}" | head -${num} | xargs rm
 fi
+
+sqlite3 "${database}" 'create table if not exists backupXcode(id integer primary key not NULL,key integer unique not NULL,value integer not NULL);'
+
+#获取最后修改时间
+cd "${xcode_dir}"
+find "./${code_snippets}" "./${font_and_color_themes}" "./${key_bindings}" -type f >> ${temp}
+
+while read path; do
+    key=`md5 -q -s "${path}"`
+    value=`stat -f "%m" "${path}"`
+    isModify=`sqlite3 "${database}" "select value from backupXcode where key == '${key}';"`
+    if [ ${isModify} != ${value} ]; then
+        echo modify
+    else
+        echo not modify
+    fi
+    #    sqlite3 "${database}" "insert or replace into backupXcode values(NULL,'${key}',${value});" &
+done < ${temp}
+
+wait
+rm ${temp}
