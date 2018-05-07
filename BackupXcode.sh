@@ -14,7 +14,7 @@ xcode_dir="${HOME}/Library/Developer/Xcode/UserData"
 cloud_backup_dir="${HOME}/Library/Mobile Documents/com~apple~CloudDocs/XcodeBackup"
 local_backup_dir="${HOME}/资源/归档/XcodeBackup"
 
-xcode_backup_database="${HOME}/Library/Mobile Documents/com~apple~CloudDocs/BackupDatabase"
+xcode_backup_database="${HOME}/Library/Mobile Documents/com~apple~CloudDocs/.BackupDatabase"
 
 code_snippets="CodeSnippets"
 font_and_color_themes="FontAndColorThemes"
@@ -67,11 +67,14 @@ while read path; do
             
             cd "${xcode_dir}"
             ## backup before
-            zip -r "XcodeBackup.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}"
+            zip -r "XcodeBackup.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
+            wait
             
-            cd ${cloud_backup_dir}
+            cd "${cloud_backup_dir}"
             newBackup=`ls -t | head -1`
-            unzip -u "${newBackup}" -d "${xcode_dir}"
+            
+            unzip -u "${newBackup}" -d "${xcode_dir}" &
+            wait
             
             cd "${xcode_dir}"
             rm ${temp}
@@ -93,11 +96,14 @@ while read path; do
             
             cd "${xcode_dir}"
             ## backup before
-            zip -r "XcodeBackup.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}"
+            zip -r "XcodeBackup.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
+            wait
             
-            cd ${cloud_backup_dir}
+            cd "${cloud_backup_dir}"
             newBackup=`ls -t | head -1`
-            unzip -u "${newBackup}" -d "${xcode_dir}"
+            
+            unzip -u "${newBackup}" -d "${xcode_dir}" &
+            wait
             
             cd "${xcode_dir}"
             rm ${temp}
@@ -117,9 +123,9 @@ wait
 rm ${temp}
 
 # zip files
-#cd "${xcode_dir}"
-#zip -r "${cloud_backup_dir}/XcodeBackup+${now}.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
-#zip -r "${local_backup_dir}/XcodeBackup+${now}.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
+cd "${xcode_dir}"
+zip -r "${cloud_backup_dir}/XcodeBackup+${now}.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
+zip -r "${local_backup_dir}/XcodeBackup+${now}.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
 
 wait
 
