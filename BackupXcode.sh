@@ -106,7 +106,7 @@ while read path; do
                 cd "${cloud_backup_dir}"
                 newBackup=`ls -t | head -1`
                 
-                unzip -u "${newBackup}" -d "${xcode_dir}" &
+                unzip -o "${newBackup}" -d "${xcode_dir}" &
                 wait
             fi
         fi
