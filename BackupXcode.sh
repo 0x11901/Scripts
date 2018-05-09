@@ -89,32 +89,37 @@ while read path; do
         break
     fi
     if [ ${isModify} != ${value} ]; then
-        echo "${yellow}本地Xcode配置已经过期${reset}！"
-        num=`ls -l "${cloud_backup_dir}" |grep "^-"|wc -l`
-        if [ ${num} -ge 1 ]; then
-            echo "${green}找到最新的Xcode配置，开始自动替换${reset}！"
+        if [ ${isModify} -lt ${value} ]; then
+            echo "${yellow}本地Xcode配置超前${reset}！"
+        else
+            echo "${yellow}本地Xcode配置已经过期${reset}！"
             
-            cd "${xcode_dir}"
-            ## backup before
-            zip -r "XcodeBackup.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
-            wait
-            
-            cd "${cloud_backup_dir}"
-            newBackup=`ls -t | head -1`
-            
-            unzip -u "${newBackup}" -d "${xcode_dir}" &
-            wait
-            
-            cd "${xcode_dir}"
-            rm ${temp}
-            find "./${code_snippets}" "./${font_and_color_themes}" "./${key_bindings}" -type f >> ${temp}
-            echo 更新数据库...
-            while read path; do
-                key=`md5 -q -s "${path}"`
-                value=`stat -f "%m" "${path}"`
-                sqlite3 "${database}" "insert or replace into backupXcode values(NULL,'${key}',${value});" &
-            done < ${temp}
+            num=`ls -l "${cloud_backup_dir}" |grep "^-"|wc -l`
+            if [ ${num} -ge 1 ]; then
+                echo "${green}找到最新的Xcode配置，开始自动替换${reset}！"
+                
+                cd "${xcode_dir}"
+                ## backup before
+                zip -r "XcodeBackup.zip" "${code_snippets}" "${font_and_color_themes}" "${key_bindings}" &
+                wait
+                
+                cd "${cloud_backup_dir}"
+                newBackup=`ls -t | head -1`
+                
+                unzip -u "${newBackup}" -d "${xcode_dir}" &
+                wait
+            fi
         fi
+        cd "${xcode_dir}"
+        rm ${temp}
+        find "./${code_snippets}" "./${font_and_color_themes}" "./${key_bindings}" -type f >> ${temp}
+        echo 更新数据库...
+        while read path; do
+            key=`md5 -q -s "${path}"`
+            value=`stat -f "%m" "${path}"`
+            sqlite3 "${database}" "insert or replace into backupXcode values(NULL,'${key}',${value});"
+        done < ${temp}
+        
         break
     fi
 done < ${temp}
