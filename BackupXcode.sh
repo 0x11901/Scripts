@@ -119,7 +119,6 @@ while read path; do
             value=`stat -f "%m" "${path}"`
             sqlite3 "${database}" "insert or replace into backupXcode values(NULL,'${key}',${value});"
         done < ${temp}
-        
         break
     fi
 done < ${temp}
