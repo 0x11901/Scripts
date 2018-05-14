@@ -53,7 +53,15 @@ sqlite3 "${database}" 'create table if not exists backupXcode(id integer primary
 
 #获取最后修改时间
 cd "${xcode_dir}"
-find "./${code_snippets}" "./${font_and_color_themes}" "./${key_bindings}" -type f >> ${temp}
+if [ -d "./${code_snippets}" ]; then
+    find "./${code_snippets}" -type f >> ${temp}
+fi
+if [ -d "./${font_and_color_themes}" ]; then
+    find "./${font_and_color_themes}" -type f >> ${temp}
+fi
+if [ -d "./${key_bindings}" ]; then
+    find "./${key_bindings}" -type f >> ${temp}
+fi
 
 while read path; do
     key=`md5 -q -s "${path}"`
@@ -78,7 +86,15 @@ while read path; do
             
             cd "${xcode_dir}"
             rm ${temp}
-            find "./${code_snippets}" "./${font_and_color_themes}" "./${key_bindings}" -type f >> ${temp}
+            if [ -d "./${code_snippets}" ]; then
+                find "./${code_snippets}" -type f >> ${temp}
+            fi
+            if [ -d "./${font_and_color_themes}" ]; then
+                find "./${font_and_color_themes}" -type f >> ${temp}
+            fi
+            if [ -d "./${key_bindings}" ]; then
+                find "./${key_bindings}" -type f >> ${temp}
+            fi
             echo 更新数据库...
             while read path; do
                 key=`md5 -q -s "${path}"`
@@ -89,7 +105,7 @@ while read path; do
         break
     fi
     if [ ${isModify} != ${value} ]; then
-        if [ ${isModify} -lt ${value} ]; then
+        if [ ${isModify} -gt ${value} ]; then
             echo "${yellow}本地Xcode配置超前${reset}！"
         else
             echo "${yellow}本地Xcode配置已经过期${reset}！"
@@ -112,7 +128,15 @@ while read path; do
         fi
         cd "${xcode_dir}"
         rm ${temp}
-        find "./${code_snippets}" "./${font_and_color_themes}" "./${key_bindings}" -type f >> ${temp}
+        if [ -d "./${code_snippets}" ]; then
+            find "./${code_snippets}" -type f >> ${temp}
+        fi
+        if [ -d "./${font_and_color_themes}" ]; then
+            find "./${font_and_color_themes}" -type f >> ${temp}
+        fi
+        if [ -d "./${key_bindings}" ]; then
+            find "./${key_bindings}" -type f >> ${temp}
+        fi
         echo 更新数据库...
         while read path; do
             key=`md5 -q -s "${path}"`
