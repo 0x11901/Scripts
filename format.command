@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")"
+cd '$(dirname "${0}")'
 
 red=$(tput setaf 1)
 green=$(tput setaf 2)
