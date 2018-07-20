@@ -1,2 +1,2 @@
 # Scripts
-Shell scripts collected in work
+Shell scripts collected in work.
