@@ -7,14 +7,14 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-vesion=$(ls /usr/local/bin | grep clang-format)
-if [ -z "${vesion}" ]; then
+version=$(ls /usr/local/bin | grep clang-format)
+if [ -z "${version}" ]; then
 	echo "${red}本脚本依赖clang-format  >= 7.0.0${reset}"
 	echo "${green}使用brew install clang-format安装${reset}"
 	exit
 else
-	vesion=$(clang-format --version)
-	if [ ${vesion:21:1} -lt 7 ]; then
+	version=$(clang-format --version)
+	if [ ${version:21:1} -lt 7 ]; then
 		echo "${red}本脚本依赖clang-format  >= 7.0.0${reset}"
 		echo "${green}使用brew upgrade clang-format升级${reset}"
 		exit
